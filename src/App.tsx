@@ -7,18 +7,17 @@ import {
 } from "@visx/hierarchy/lib/types";
 import { LinkVertical } from "@visx/shape";
 import { LinearGradient } from "@visx/gradient";
-import { confirmAlert } from 'react-confirm-alert';
-import './App.css'
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import { confirmAlert } from "react-confirm-alert";
+import "./App.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const citrus = "#000000";
 const white = "#000000";
 export const green = "#020202";
 const aqua = "#222222";
 const merlinsbeard = "#020202aa";
-const red = "#ff0a19"
+const red = "#ff0a19";
 export const background = "#fff";
-
 
 interface NodeShape {
   name: string;
@@ -26,19 +25,17 @@ interface NodeShape {
   imgUrl?: string;
 }
 
-
 const clusterData: NodeShape = {
   name: "Vivek",
   children: [
     {
       name: "Hubspot",
       imgUrl:
-      "https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg",     
+        "https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg",
       children: [
         {
           name: "hubspot-iPhone",
-          imgUrl:
-            "https://static.thenounproject.com/png/1314324-200.png",
+          imgUrl: "https://static.thenounproject.com/png/1314324-200.png",
         },
       ],
     },
@@ -49,15 +46,12 @@ const clusterData: NodeShape = {
       children: [
         {
           name: "Github-iPhone",
-          imgUrl:
-            "https://static.thenounproject.com/png/1314324-200.png",
+          imgUrl: "https://static.thenounproject.com/png/1314324-200.png",
         },
         {
           name: "Github-Mac",
-          imgUrl:
-            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+          imgUrl: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
         },
-        
       ],
     },
     {
@@ -67,13 +61,11 @@ const clusterData: NodeShape = {
       children: [
         {
           name: "Copilot-iPhone",
-          imgUrl:
-            "https://static.thenounproject.com/png/1314324-200.png",
+          imgUrl: "https://static.thenounproject.com/png/1314324-200.png",
         },
         {
           name: "Copilot-Mac",
-          imgUrl:
-            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+          imgUrl: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
         },
         {
           name: "Copilot-Windows",
@@ -84,12 +76,12 @@ const clusterData: NodeShape = {
     },
     {
       name: "Atlassian",
-      imgUrl:"https://cdn.icon-icons.com/icons2/2407/PNG/512/atlassian_icon_146225.png",
+      imgUrl:
+        "https://cdn.icon-icons.com/icons2/2407/PNG/512/atlassian_icon_146225.png",
       children: [
         {
           name: "at-Mac",
-          imgUrl:
-            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+          imgUrl: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
         },
         {
           name: "at-Windows",
@@ -100,7 +92,6 @@ const clusterData: NodeShape = {
     },
   ],
 };
-
 
 function RootNode({ node }: { node: HierarchyPointNode<NodeShape> }) {
   const width = 70;
@@ -130,7 +121,6 @@ function RootNode({ node }: { node: HierarchyPointNode<NodeShape> }) {
     </Group>
   );
 }
-
 
 function Node({
   node,
@@ -168,21 +158,20 @@ function Node({
             textAnchor="middle"
             style={{ pointerEvents: "none" }}
             fill={isParent ? white : citrus}
-          >
-          </text>
+          ></text>
         </>
       )}
     </Group>
   );
 }
 
-const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
-
 export type DendrogramProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
 };
+
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 export default function App({
   width,
@@ -193,23 +182,25 @@ export default function App({
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const [terminatedNode, setTerminatedNode] = useState<string | null>(null);
+  const [terminatedNodes, setTerminatedNodes] = useState<string[]>([]);
 
   const onClickonNode = (nodeName: string) => {
     confirmAlert({
-      title: 'Confirm to submit',
-      message: 'Are you sure to do this.',
+      title: "Confirm to submit",
+      message: "Are you sure to do this.",
       buttons: [
         {
-          label: 'Success',
-          onClick: () => console.log('Yes')
+          label: "Success",
+          onClick: () => console.log("Yes"),
         },
         {
-          label: 'Terminate',
-          onClick: () => {console.log('No');
-          setTerminatedNode(nodeName);}
-        }
-      ]
+          label: "Terminate",
+          onClick: () => {
+            console.log("No");
+            setTerminatedNodes((prevNodes) => [...prevNodes, nodeName]);
+          },
+        },
+      ],
     });
   };
 
@@ -221,23 +212,24 @@ export default function App({
           <Group top={margin.top} left={margin.left}>
             {cluster.links().map((link: any, i: any) => {
               const isTerminated =
-              terminatedNode && (link.target.data.name === terminatedNode || link.source.data.name === terminatedNode);
-            const strokeColor = isTerminated ? red : merlinsbeard;
+                terminatedNodes.includes(link.target.data.name) ||
+                terminatedNodes.includes(link.source.data.name);
+              const strokeColor = isTerminated ? red : merlinsbeard;
 
-            return(
-              <LinkVertical<
-                HierarchyPointLink<NodeShape>,
-                HierarchyPointNode<NodeShape>
-              >
-                key={`cluster-link-${i}`}
-                data={link}
-                stroke={strokeColor}
-                strokeWidth="1"
-                strokeOpacity={0.2}
-                fill="none"
-              />
-            )
-        })}
+              return (
+                <LinkVertical<
+                  HierarchyPointLink<NodeShape>,
+                  HierarchyPointNode<NodeShape>
+                >
+                  key={`cluster-link-${i}`}
+                  data={link}
+                  stroke={strokeColor}
+                  strokeWidth="1"
+                  strokeOpacity={0.2}
+                  fill="none"
+                />
+              );
+            })}
             {cluster.descendants().map((node: any, i: any) => (
               <Node
                 key={`cluster-node-${i}`}
@@ -248,8 +240,7 @@ export default function App({
           </Group>
         )}
       </Cluster>
-      <div>
-      </div>
+      <div></div>
     </svg>
   );
 }
