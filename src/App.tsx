@@ -15,7 +15,7 @@ const citrus = "#000000";
 const white = "#000000";
 export const green = "#020202";
 const aqua = "#222222";
-const merlinsbeard = "#020202aa";
+const navyBlue = "#010080";
 const red = "#ff0a19";
 export const background = "#fff";
 
@@ -26,7 +26,7 @@ interface NodeShape {
 }
 
 const clusterData: NodeShape = {
-  name: "Vivek",
+  name: "John Doe",
   children: [
     {
       name: "Hubspot",
@@ -57,7 +57,7 @@ const clusterData: NodeShape = {
     {
       name: "Copilot",
       imgUrl:
-        "https://brandlogos.net/wp-content/uploads/2022/10/microsoft_365-logo_brandlogos.net_j9l2g.png",
+        "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/512/chrome.png",
       children: [
         {
           name: "Copilot-iPhone",
@@ -94,7 +94,7 @@ const clusterData: NodeShape = {
 };
 
 function RootNode({ node }: { node: HierarchyPointNode<NodeShape> }) {
-  const width = 70;
+  const width = 80;
   const height = 30;
   const centerX = -width / 2;
   const centerY = -height / 2;
@@ -143,8 +143,8 @@ function Node({
             href={node.data.imgUrl}
             width={30} // Set width as needed
             height={30} // Set height as needed
-            x={-12}
-            y={-15}
+            x={-15}
+            y={-3}
             onClick={() => {
               if (isLeaf) {
                 onclick();
@@ -214,7 +214,7 @@ export default function App({
               const isTerminated =
                 terminatedNodes.includes(link.target.data.name) ||
                 terminatedNodes.includes(link.source.data.name);
-              const strokeColor = isTerminated ? red : merlinsbeard;
+              const strokeColor = isTerminated ? red : navyBlue;
 
               return (
                 <LinkVertical<
@@ -224,7 +224,7 @@ export default function App({
                   key={`cluster-link-${i}`}
                   data={link}
                   stroke={strokeColor}
-                  strokeWidth="1"
+                  strokeWidth="1.5"
                   strokeOpacity={0.2}
                   fill="none"
                 />
