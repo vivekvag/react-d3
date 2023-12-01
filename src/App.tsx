@@ -171,7 +171,7 @@ export type DendrogramProps = {
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
-const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
+const defaultMargin = { top: 60, left: 0, right: 0, bottom: 60 };
 
 export default function App({
   width,
@@ -191,12 +191,12 @@ export default function App({
       buttons: [
         {
           label: "Success",
-          onClick: () => console.log("Yes"),
+          onClick: () => console.log("Not a feature"),
         },
         {
           label: "Terminate",
           onClick: () => {
-            console.log("No");
+            console.log("Line is gonna terminate");
             setTerminatedNodes((prevNodes) => [...prevNodes, nodeName]);
           },
         },
