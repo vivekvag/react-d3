@@ -171,7 +171,7 @@ export type DendrogramProps = {
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
-const defaultMargin = { top: 60, left: 0, right: 0, bottom: 60 };
+const defaultMargin = { top: 40, left: 0, right: 0, bottom: 40 };
 
 export default function App({
   width,
