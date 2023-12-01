@@ -7,14 +7,18 @@ import {
 } from "@visx/hierarchy/lib/types";
 import { LinkVertical } from "@visx/shape";
 import { LinearGradient } from "@visx/gradient";
+import { confirmAlert } from 'react-confirm-alert';
 import './App.css'
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const citrus = "#000000";
 const white = "#000000";
 export const green = "#020202";
 const aqua = "#222222";
 const merlinsbeard = "#020202aa";
-export const background = "#ffff";
+const red = "#ff0a19"
+export const background = "#fff";
+
 
 interface NodeShape {
   name: string;
@@ -22,73 +26,75 @@ interface NodeShape {
   imgUrl?: string;
 }
 
+
 const clusterData: NodeShape = {
   name: "Vivek",
   children: [
     {
-      name: "A",
+      name: "Hubspot",
       imgUrl:
-        "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
+      "https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg",     
       children: [
         {
-          name: "A1",
+          name: "hubspot-iPhone",
           imgUrl:
-            "https://i.pinimg.com/originals/b8/ae/b1/b8aeb1b09d6c6529cbcf66b414052d57.png",
+            "https://static.thenounproject.com/png/1314324-200.png",
         },
       ],
     },
     {
-      name: "B",
+      name: "Github",
       imgUrl:
-        "https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg",
+        "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
       children: [
         {
-          name: "B1",
+          name: "Github-iPhone",
           imgUrl:
-            "https://i.pinimg.com/originals/b8/ae/b1/b8aeb1b09d6c6529cbcf66b414052d57.png",
+            "https://static.thenounproject.com/png/1314324-200.png",
         },
         {
-          name: "B2",
+          name: "Github-Mac",
           imgUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZth4srs693eCm9IBhPtbuMg83LmxFNsp8SK5tmtHtpiRcrMpJYzTBJHhezZq06A5kY8Y&usqp=CAU",
+            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        
+      ],
+    },
+    {
+      name: "Copilot",
+      imgUrl:
+        "https://brandlogos.net/wp-content/uploads/2022/10/microsoft_365-logo_brandlogos.net_j9l2g.png",
+      children: [
+        {
+          name: "Copilot-iPhone",
+          imgUrl:
+            "https://static.thenounproject.com/png/1314324-200.png",
         },
         {
-          name: "B3",
+          name: "Copilot-Mac",
+          imgUrl:
+            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        {
+          name: "Copilot-Windows",
           imgUrl:
             "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
         },
       ],
     },
     {
-      name: "D",
-      imgUrl:
-        "https://brandlogos.net/wp-content/uploads/2022/10/microsoft_365-logo_brandlogos.net_j9l2g.png",
-      children: [
-        {
-          name: "Z",
-          imgUrl:
-            "https://i.pinimg.com/originals/b8/ae/b1/b8aeb1b09d6c6529cbcf66b414052d57.png",
-        },
-        {
-          name: "web",
-          imgUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZth4srs693eCm9IBhPtbuMg83LmxFNsp8SK5tmtHtpiRcrMpJYzTBJHhezZq06A5kY8Y&usqp=CAU",
-        },
-      ],
-    },
-    {
-      name: "D",
+      name: "Atlassian",
       imgUrl:"https://cdn.icon-icons.com/icons2/2407/PNG/512/atlassian_icon_146225.png",
       children: [
         {
-          name: "Z",
+          name: "at-Mac",
           imgUrl:
-            "https://i.pinimg.com/originals/b8/ae/b1/b8aeb1b09d6c6529cbcf66b414052d57.png",
+            "https://cdn-icons-png.flaticon.com/512/657/657109.png",
         },
         {
-          name: "web",
+          name: "at-Windows",
           imgUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZth4srs693eCm9IBhPtbuMg83LmxFNsp8SK5tmtHtpiRcrMpJYzTBJHhezZq06A5kY8Y&usqp=CAU",
+            "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
         },
       ],
     },
@@ -125,7 +131,6 @@ function RootNode({ node }: { node: HierarchyPointNode<NodeShape> }) {
   );
 }
 
-const onClickImage = () => {};
 
 function Node({
   node,
@@ -188,8 +193,24 @@ export default function App({
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const onClickonNode = () => {
-    console.log("onClickonNode");
+  const [terminatedNode, setTerminatedNode] = useState<string | null>(null);
+
+  const onClickonNode = (nodeName: string) => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Success',
+          onClick: () => console.log('Yes')
+        },
+        {
+          label: 'Terminate',
+          onClick: () => {console.log('No');
+          setTerminatedNode(nodeName);}
+        }
+      ]
+    });
   };
 
   return width < 10 ? null : (
@@ -198,24 +219,30 @@ export default function App({
       <Cluster<NodeShape> root={data} size={[xMax, yMax]}>
         {(cluster: any) => (
           <Group top={margin.top} left={margin.left}>
-            {cluster.links().map((link: any, i: any) => (
+            {cluster.links().map((link: any, i: any) => {
+              const isTerminated =
+              terminatedNode && (link.target.data.name === terminatedNode || link.source.data.name === terminatedNode);
+            const strokeColor = isTerminated ? red : merlinsbeard;
+
+            return(
               <LinkVertical<
                 HierarchyPointLink<NodeShape>,
                 HierarchyPointNode<NodeShape>
               >
                 key={`cluster-link-${i}`}
                 data={link}
-                stroke={merlinsbeard}
+                stroke={strokeColor}
                 strokeWidth="1"
                 strokeOpacity={0.2}
                 fill="none"
               />
-            ))}
+            )
+        })}
             {cluster.descendants().map((node: any, i: any) => (
               <Node
                 key={`cluster-node-${i}`}
                 node={node}
-                onclick={onClickonNode}
+                onclick={() => onClickonNode(node.data.name)}
               />
             ))}
           </Group>
