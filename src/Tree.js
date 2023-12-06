@@ -4,18 +4,40 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import * as d3 from 'd3';
 
 const HierarchyChart = ({ data }) => {
+    
+  const isNodeTerminated = (d) => {
+    const svg = d3.select(svgRef.current);
+  
+    // Get the current color of the selected path
+    const currentColor = svg
+      .selectAll('.link')
+      .filter((link) => link.target === d || link.source === d)
+      .attr('stroke');
+  
+    return currentColor === 'red';
+  };
+  
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = (d) => {
+    const isTerminated = isNodeTerminated(d);
+  
+    const title = isTerminated
+      ? 'Enable the Line'
+      : 'Confirm to terminate';
+    const message = isTerminated
+      ? 'Are you sure to undo termination?'
+      : 'Are you sure to terminate?';
+  
     confirmAlert({
-      title: 'Confirm to submit',
-      message: 'Are you sure to do this.',
+      title,
+      message,
       buttons: [
         {
-          label: 'Cancel',
+          label: isTerminated ? 'Cancel' : 'Leave',
           onClick: () => console.log('Cancel'),
         },
         {
-          label: 'Terminate',
+          label: isTerminated ? 'Enable' : 'Terminate',
           onClick: () => {
             updatePathColor(d);
             console.log(d);
@@ -24,15 +46,19 @@ const HierarchyChart = ({ data }) => {
       ],
     });
   };
+  
 
   const updatePathColor = (d) => {
     const svg = d3.select(svgRef.current);
+    
+      // Toggle between red and #ccc
+      const newColor =  isNodeTerminated(d)  ? '#ccc' : 'red';
 
-    // Change color for the selected path and its parent
-    svg
-      .selectAll('.link')
-      .filter((link) => link.target === d || link.source === d)
-      .attr('stroke', 'red');
+      // Update the color for the selected path and its parent
+      svg
+        .selectAll('.link')
+        .filter((link) => link.target === d || link.source === d)
+        .attr('stroke', newColor);
   };
 
   const svgRef = useRef(null);
