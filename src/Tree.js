@@ -20,11 +20,11 @@ const HierarchyChart = ({ data }) => {
     const svg = d3.select(svgRef.current);
     const newColor = isNodeTerminated(d) ? '#ccc' : 'red';
     svg
-      .selectAll('.link')
-      .filter((link) => link.target === d || link.source === d)
-      .attr('stroke', newColor);
+    .selectAll('.link')
+    .filter((link) => link.target === d || link.source === d)
+    .attr('stroke', newColor);
   };
-
+  
   const submit = (d) => {
     const isTerminated = isNodeTerminated(d);
     const title = isTerminated ? 'Enable the Line' : 'Confirm to terminate';
