@@ -6,6 +6,10 @@
 }
 
 svg{
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: rotate(90deg);
 }
 
@@ -24,6 +28,10 @@ svg{
   stroke-width: 2px;
 }
 
-.node text{
+.node image, .node text{
   transform: rotate(-90deg);
+}
+
+.node image{
+  margin-top: 5rem;
 }

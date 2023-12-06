@@ -1,10 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import { confirmAlert } from 'react-confirm-alert'; 
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import * as d3 from 'd3';
 
-const HierarchyChart = ({ data  }) => {
-
+const HierarchyChart = ({ data }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = (d) => {
     confirmAlert({
@@ -12,17 +11,17 @@ const HierarchyChart = ({ data  }) => {
       message: 'Are you sure to do this.',
       buttons: [
         {
-          label: 'Yes',
-          onClick: () => alert('Click Yes')
+          label: 'Cancel',
+          onClick: () => console.log('Cancel'),
         },
         {
           label: 'Terminate',
           onClick: () => {
             updatePathColor(d);
-            console.log(d)
-          }
-        }
-      ]
+            console.log(d);
+          },
+        },
+      ],
     });
   };
 
@@ -33,7 +32,7 @@ const HierarchyChart = ({ data  }) => {
     svg
       .selectAll('.link')
       .filter((link) => link.target === d || link.source === d)
-      .attr('stroke', 'skyblue');
+      .attr('stroke', 'red');
   };
 
   const svgRef = useRef(null);
@@ -52,8 +51,16 @@ const HierarchyChart = ({ data  }) => {
       // Select the SVG container
       const svg = d3.select(svgRef.current);
 
+      // Create a zoom behavior
+      const zoom = d3.zoom().on('zoom', (event) => {
+        svg.attr('transform', event.transform);
+      });
+
+      // Apply the zoom behavior to the SVG container
+      svg.call(zoom);
+
       // Create links
-      const links = svg
+      svg
         .selectAll('.link')
         .data(hierarchy.links())
         .enter()
@@ -77,23 +84,40 @@ const HierarchyChart = ({ data  }) => {
           }
         });
 
-      // Add circles to represent nodes
-      nodes.append('circle').attr('r', 5);
+      // Add text or image labels
+      nodes.each(function (d) {
+        const node = d3.select(this);
 
-      // Add text labels
-      nodes
-        .append('text')
-        .attr('dy', '.35em')
-        .attr('x', (d) => (d.children ? -8 : 8))
-        .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
-        .text((d) => d.data.name);
+        if (d.data.image) {
+          // If the node has an image property, show the image
+          node
+            .append('image')
+            .attr('xlink:href', d.data.image)
+            .attr('x', -12)
+            .attr('y', 0)
+            .attr('width', 24)
+            .attr('height', 24);
+        } else {
+          // Add circles to represent nodes
+          node
+            .append('circle')
+            .attr('r', 5)
+            .attr('x', -12)
+            .attr('y', 0);
+
+          // If the node doesn't have an image property, show the text
+          node
+            .append('text')
+            .attr('dy', '.35rem')
+            .attr('x', (d) => (d.children ? -8 : 8))
+            .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
+            .text((d) => d.data.name);
+        }
+      });
     }
   }, [data, submit]);
 
-  return (
-    <svg ref={svgRef} width={600} height={600}>
-    </svg>
-  );
+  return <svg ref={svgRef} width={600} height={600}></svg>;
 };
 
 export default HierarchyChart;

@@ -3,36 +3,104 @@ import React from 'react';
 import HierarchyChart from './Tree';
 import './index.css'
 
+// const treeData = {
+//   name: 'John Doe',
+//   children: [
+//     {
+//       image: 'https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg',
+//       children: [
+//         {
+//           image: 'https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg',
+//         },
+//         {
+//           name: '5',
+//         },
+//       ],
+//     },
+//     {
+//       name: 'Mac',
+//       children: [
+//         {
+//           name: '1',
+//         },
+//         {
+//           name: '2',
+//         },
+//       ],
+//     },
+//     {
+//       name: 'Windows',
+//       children: [
+//         {
+//           name: '3',
+//         },
+//       ],
+//     },
+//   ],
+// };
+
 const treeData = {
-  name: 'John Doe',
+  name: "John Doe",
   children: [
     {
-      name: 'iPhone',
+      name: "Hubspot",
+      image:
+        "https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg",
       children: [
         {
-          name: '4',
-        },
-        {
-          name: '5',
+          name: "hubspot-iPhone",
+          image: "https://static.thenounproject.com/png/1314324-200.png",
         },
       ],
     },
     {
-      name: 'Mac',
+      name: "Github",
+      image:
+        "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
       children: [
         {
-          name: '1',
+          name: "Github-iPhone",
+          image: "https://static.thenounproject.com/png/1314324-200.png",
         },
         {
-          name: '2',
+          name: "Github-Mac",
+          image: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
         },
       ],
     },
     {
-      name: 'Windows',
+      name: "Copilot",
+      image:
+        "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/512/chrome.png",
       children: [
         {
-          name: '3',
+          name: "Copilot-iPhone",
+          image: "https://static.thenounproject.com/png/1314324-200.png",
+        },
+        {
+          name: "Copilot-Mac",
+          image: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        {
+          name: "Copilot-Windows",
+          image:
+            "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
+        },
+      ],
+    },
+    {
+      name: "Atlassian",
+      image:
+        "https://cdn.icon-icons.com/icons2/2407/PNG/512/atlassian_icon_146225.png",
+      children: [
+        {
+          name: "at-Mac",
+          image: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        {
+          name: "at-Windows",
+          image:
+            "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
         },
       ],
     },
