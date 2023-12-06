@@ -20,11 +20,20 @@ const HierarchyChart = ({ data }) => {
     const svg = d3.select(svgRef.current);
     const newColor = isNodeTerminated(d) ? '#ccc' : 'red';
     svg
-    .selectAll('.link')
-    .filter((link) => link.target === d || link.source === d)
-    .attr('stroke', newColor);
+      .selectAll('.link')
+      .filter((link) => link.target === d || link.source === d)
+      .attr('stroke', newColor);
   };
-  
+
+  const resetChildColors = (parent) => {
+    const svg = d3.select(svgRef.current);
+    const childrenLinks = svg
+      .selectAll('.link')
+      .filter((link) => link.source === parent);
+
+    childrenLinks.attr('stroke', '#ccc');
+  };
+
   const submit = (d) => {
     const isTerminated = isNodeTerminated(d);
     const title = isTerminated ? 'Enable the Line' : 'Confirm to terminate';
@@ -43,6 +52,10 @@ const HierarchyChart = ({ data }) => {
         {
           label: isTerminated ? 'Enable' : 'Terminate',
           onClick: () => {
+            if (!isTerminated) {
+              console.log('hello')
+              resetChildColors(d);
+            }
             updatePathColor(d);
             console.log(d);
           },
@@ -79,9 +92,33 @@ const HierarchyChart = ({ data }) => {
       .attr('transform', (d) => `translate(${d.y},${d.x})`)
       .on('click', (event, d) => {
         if (!d.children && !d._children) {
+          // Call the submit function directly on the parent node click
           submit(d);
+        } else {
+          console.log('I got logged')
+          // Reset child colors for parent nodes with children
+          resetChildColors(d);
         }
-      });
+      })
+      .call(
+        d3
+          .drag()
+          .on('start', (event, d) => {
+            // Prevent propagation to avoid zoom interference
+            event.sourceEvent.stopPropagation();
+          })
+          .on('drag', (event, d) => {
+            const newX = d.x + event.dx;
+            const newY = d.y + event.dy;
+            d.x = newX;
+            d.y = newY;
+            d3.select(this).attr('transform', `translate(${newY},${newX})`);
+            svg
+              .selectAll('.link')
+              .filter((link) => link.target === d || link.source === d)
+              .attr('d', d3.linkHorizontal().x((d) => d.y).y((d) => d.x));
+          })
+      );
 
     nodes.each(function (d) {
       const node = d3.select(this);
@@ -119,6 +156,9 @@ const HierarchyChart = ({ data }) => {
       const hierarchy = createTree();
       createLinks(svg, hierarchy);
       createNodes(svg, hierarchy);
+
+      // Rotate the SVG to 90 degrees
+      svg.attr('transform', 'rotate(90)');
     }
   }, [data]);
 
