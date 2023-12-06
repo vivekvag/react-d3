@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 
 const HierarchyChart = ({ data  }) => {
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const submit = (d) => {
     confirmAlert({
       title: 'Confirm to submit',
@@ -87,7 +88,7 @@ const HierarchyChart = ({ data  }) => {
         .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
         .text((d) => d.data.name);
     }
-  }, [data]);
+  }, [data, submit]);
 
   return (
     <svg ref={svgRef} width={600} height={600}>
