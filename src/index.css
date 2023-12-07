@@ -1,11 +1,11 @@
-#root{
+#root {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 10rem;
 }
 
-svg{
+svg {
   padding: 12px;
   display: flex;
   justify-content: center;
@@ -28,10 +28,11 @@ svg{
   stroke-width: 2px;
 }
 
-.node image, .node text{
+.node image,
+.node text {
   transform: rotate(-90deg);
 }
 
-.node image{
+.node image {
   margin-top: 5rem;
 }

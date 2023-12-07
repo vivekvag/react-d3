@@ -11,12 +11,12 @@ const HierarchyChart = ({ data }) => {
     const svg = d3.select(svgRef.current);
     const currentColor = svg
       .selectAll('.link')
-      .filter((link) => link.target === d || link.source === d)
+      .filter((link) => link.target === d)
       .attr('stroke');
     console.log(
       svg
         .selectAll('.link')
-        .filter((link) => link.target === d || link.source === d)
+        .filter((link) => link.target === d)
         .attr('stroke')
     );
     return currentColor === 'red';
@@ -27,7 +27,7 @@ const HierarchyChart = ({ data }) => {
     const newColor = isNodeTerminated(d) ? '#ccc' : 'red';
     svg
       .selectAll('.link')
-      .filter((link) => link.target === d || link.source === d)
+      .filter((link) => link.target === d)
       .attr('stroke', newColor);
   };
 
@@ -114,14 +114,22 @@ const HierarchyChart = ({ data }) => {
       .attr('stroke', '#ccc');
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
+    const nodeGap = 40;
     const nodes = svg
       .selectAll('.node')
       .data(hierarchy.descendants())
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('transform', (d) => `translate(${d.y},${d.x})`)
+      .attr('transform', (d) => {
+        if (d.depth === 2) {
+          return `translate(${d.y + nodeGap},${d.parent.x - 60})`;
+        } else {
+          return `translate(${d.y},${d.x})`;
+        }
+      })
       .on('click', (event, d) => {
         if (!d.children && !d._children) {
           // Call the submit function directly on the parent node click
@@ -173,7 +181,7 @@ const HierarchyChart = ({ data }) => {
       // Rotate the SVG to 90 degrees
       svg.attr('transform', 'rotate(90)');
     }
-  }, [data]);
+  }, [createNodes, createTree, data]);
 
   return <svg ref={svgRef} width={500} height={600}></svg>;
 };
