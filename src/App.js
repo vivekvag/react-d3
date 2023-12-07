@@ -3,42 +3,6 @@ import React from 'react';
 import HierarchyChart from './Tree';
 import './index.css'
 
-// const treeData = {
-//   name: 'John Doe',
-//   children: [
-//     {
-//       image: 'https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg',
-//       children: [
-//         {
-//           image: 'https://www.rockethub.com/wp-content/uploads/2022/07/hubspot-logo.jpg',
-//         },
-//         {
-//           name: '5',
-//         },
-//       ],
-//     },
-//     {
-//       name: 'Mac',
-//       children: [
-//         {
-//           name: '1',
-//         },
-//         {
-//           name: '2',
-//         },
-//       ],
-//     },
-//     {
-//       name: 'Windows',
-//       children: [
-//         {
-//           name: '3',
-//         },
-//       ],
-//     },
-//   ],
-// };
-
 const treeData = {
   name: "John Doe",
   children: [
