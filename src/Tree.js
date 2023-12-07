@@ -7,12 +7,17 @@ const TREE_SIZE = [500, 300];
 const CIRCLE_RADIUS = 5;
 
 const HierarchyChart = ({ data }) => {
+  
   const isNodeTerminated = (d) => {
     const svg = d3.select(svgRef.current);
     const currentColor = svg
       .selectAll('.link')
       .filter((link) => link.target === d || link.source === d)
       .attr('stroke');
+    console.log(svg
+      .selectAll('.link')
+      .filter((link) => link.target === d || link.source === d)
+      .attr('stroke') )
     return currentColor === 'red';
   };
 
@@ -25,17 +30,33 @@ const HierarchyChart = ({ data }) => {
       .attr('stroke', newColor);
   };
 
-  const resetChildColors = (parent) => {
+  const toggleParentColor = (d) => {
     const svg = d3.select(svgRef.current);
-    const childrenLinks = svg
+    const allChildrenAreRed = svg
       .selectAll('.link')
-      .filter((link) => link.source === parent);
+      .filter((link) => link.source === d)
+      .nodes()
+      .every((node) => d3.select(node).attr('stroke') === 'red');
+      
+    return allChildrenAreRed;
+  };
+  
 
-    childrenLinks.attr('stroke', '#ccc');
+  const resetChildColors = (d) => {
+    console.log(toggleParentColor(d));
+    const svg = d3.select(svgRef.current);
+    const newColor = toggleParentColor(d) ? '#ccc' : 'red';
+
+    svg
+    .selectAll('.link')
+    .filter((link) => link.source === d)
+    .attr('stroke', newColor);
+
   };
 
   const submit = (d) => {
     const isTerminated = isNodeTerminated(d);
+    const allChildrenAreRed = toggleParentColor(d);
     const title = isTerminated ? 'Enable the Line' : 'Confirm to terminate';
     const message = isTerminated
       ? 'Are you sure to undo termination?'
@@ -50,14 +71,15 @@ const HierarchyChart = ({ data }) => {
           onClick: () => console.log('Cancel'),
         },
         {
-          label: isTerminated ? 'Enable' : 'Terminate',
+          label: isTerminated ? 'Enable' : d.depth === 1 ? allChildrenAreRed ? 'Enable All' : "Terminate All" : 'Terminate',
           onClick: () => {
-            if (!isTerminated) {
-              console.log('hello')
+            if (d.depth === 1) {
               resetChildColors(d);
             }
-            updatePathColor(d);
-            console.log(d);
+            else {
+              updatePathColor(d);
+              console.log(d);
+            }
           },
         },
       ],
@@ -94,32 +116,13 @@ const HierarchyChart = ({ data }) => {
         if (!d.children && !d._children) {
           // Call the submit function directly on the parent node click
           submit(d);
-        } else {
+        } else if(d.depth === 1){
           console.log('I got logged')
           // Reset child colors for parent nodes with children
-          resetChildColors(d);
+          submit(d);
         }
       })
-      .call(
-        d3
-          .drag()
-          .on('start', (event, d) => {
-            // Prevent propagation to avoid zoom interference
-            event.sourceEvent.stopPropagation();
-          })
-          .on('drag', (event, d) => {
-            const newX = d.x + event.dx;
-            const newY = d.y + event.dy;
-            d.x = newX;
-            d.y = newY;
-            d3.select(this).attr('transform', `translate(${newY},${newX})`);
-            svg
-              .selectAll('.link')
-              .filter((link) => link.target === d || link.source === d)
-              .attr('d', d3.linkHorizontal().x((d) => d.y).y((d) => d.x));
-          })
-      );
-
+        
     nodes.each(function (d) {
       const node = d3.select(this);
 
