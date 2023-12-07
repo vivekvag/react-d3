@@ -3,21 +3,22 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import * as d3 from 'd3';
 
-const TREE_SIZE = [500, 300];
+const TREE_SIZE = [600, 300];
 const CIRCLE_RADIUS = 5;
 
 const HierarchyChart = ({ data }) => {
-  
   const isNodeTerminated = (d) => {
     const svg = d3.select(svgRef.current);
     const currentColor = svg
       .selectAll('.link')
       .filter((link) => link.target === d || link.source === d)
       .attr('stroke');
-    console.log(svg
-      .selectAll('.link')
-      .filter((link) => link.target === d || link.source === d)
-      .attr('stroke') )
+    console.log(
+      svg
+        .selectAll('.link')
+        .filter((link) => link.target === d || link.source === d)
+        .attr('stroke')
+    );
     return currentColor === 'red';
   };
 
@@ -37,10 +38,9 @@ const HierarchyChart = ({ data }) => {
       .filter((link) => link.source === d)
       .nodes()
       .every((node) => d3.select(node).attr('stroke') === 'red');
-      
+
     return allChildrenAreRed;
   };
-  
 
   const resetChildColors = (d) => {
     console.log(toggleParentColor(d));
@@ -48,10 +48,9 @@ const HierarchyChart = ({ data }) => {
     const newColor = toggleParentColor(d) ? '#ccc' : 'red';
 
     svg
-    .selectAll('.link')
-    .filter((link) => link.source === d)
-    .attr('stroke', newColor);
-
+      .selectAll('.link')
+      .filter((link) => link.source === d)
+      .attr('stroke', newColor);
   };
 
   const submit = (d) => {
@@ -71,12 +70,17 @@ const HierarchyChart = ({ data }) => {
           onClick: () => console.log('Cancel'),
         },
         {
-          label: isTerminated ? 'Enable' : d.depth === 1 ? allChildrenAreRed ? 'Enable All' : "Terminate All" : 'Terminate',
+          label: isTerminated
+            ? 'Enable'
+            : d.depth === 1
+            ? allChildrenAreRed
+              ? 'Enable All'
+              : 'Terminate All'
+            : 'Terminate',
           onClick: () => {
             if (d.depth === 1) {
               resetChildColors(d);
-            }
-            else {
+            } else {
               updatePathColor(d);
               console.log(d);
             }
@@ -100,7 +104,13 @@ const HierarchyChart = ({ data }) => {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', d3.linkHorizontal().x((d) => d.y).y((d) => d.x))
+      .attr(
+        'd',
+        d3
+          .linkHorizontal()
+          .x((d) => d.y)
+          .y((d) => d.x)
+      )
       .attr('stroke', '#ccc');
   };
 
@@ -116,13 +126,13 @@ const HierarchyChart = ({ data }) => {
         if (!d.children && !d._children) {
           // Call the submit function directly on the parent node click
           submit(d);
-        } else if(d.depth === 1){
-          console.log('I got logged')
+        } else if (d.depth === 1) {
+          console.log('I got logged');
           // Reset child colors for parent nodes with children
           submit(d);
         }
-      })
-        
+      });
+
     nodes.each(function (d) {
       const node = d3.select(this);
 
@@ -165,7 +175,7 @@ const HierarchyChart = ({ data }) => {
     }
   }, [data]);
 
-  return <svg ref={svgRef} width={600} height={600}></svg>;
+  return <svg ref={svgRef} width={500} height={600}></svg>;
 };
 
 export default HierarchyChart;
