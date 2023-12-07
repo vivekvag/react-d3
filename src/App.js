@@ -51,6 +51,16 @@ const treeData = {
           name: "hubspot-iPhone",
           image: "https://static.thenounproject.com/png/1314324-200.png",
         },
+        {
+          name: "hub-Mac",
+          image: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        {
+          name: "hub-Windows",
+          image:
+            "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
+        },
+        
       ],
     },
     {
@@ -101,6 +111,30 @@ const treeData = {
           name: "at-Windows",
           image:
             "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
+        },
+        {
+          name: "at-iPhone",
+          image: "https://static.thenounproject.com/png/1314324-200.png",
+        },
+      ],
+    },
+    {
+      name: "New1",
+      image:
+        "https://cdn.icon-icons.com/icons2/2407/PNG/512/atlassian_icon_146225.png",
+      children: [
+        {
+          name: "new-Mac",
+          image: "https://cdn-icons-png.flaticon.com/512/657/657109.png",
+        },
+        {
+          name: "new-Windows",
+          image:
+            "https://icones.pro/wp-content/uploads/2022/03/icone-pc-ordinateur-et-ordinateur-portable.png",
+        },
+        {
+          name: "new-iPhone",
+          image: "https://static.thenounproject.com/png/1314324-200.png",
         },
       ],
     },
