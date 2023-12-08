@@ -30,7 +30,7 @@ svg {
 
 .node image,
 .node text {
-  transform: rotate(-90deg);
+  /* transform: rotate(-90deg); */
 }
 
 .node image {

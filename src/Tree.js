@@ -90,6 +90,7 @@ const HierarchyChart = ({ data }) => {
     });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const createTree = () => {
     const hierarchy = d3.hierarchy(data);
     const treeLayout = d3.tree().size(TREE_SIZE);
@@ -107,16 +108,17 @@ const HierarchyChart = ({ data }) => {
       .attr(
         'd',
         d3
-          .linkHorizontal()
-          .x((d) => d.y)
-          .y((d) => d.x)
+          .linkVertical()
+          .x((d) => d.x)
+          .y((d) => d.y)
       )
       .attr('stroke', '#ccc');
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
-    const nodeGap = 40;
+    const nodeSeparation = 20;
+    console.log(svg);
     const nodes = svg
       .selectAll('.node')
       .data(hierarchy.descendants())
@@ -125,9 +127,9 @@ const HierarchyChart = ({ data }) => {
       .attr('class', 'node')
       .attr('transform', (d) => {
         if (d.depth === 2) {
-          return `translate(${d.y + nodeGap},${d.parent.x - 60})`;
+          return `translate(${d.x},${d.y})`;
         } else {
-          return `translate(${d.y},${d.x})`;
+          return `translate(${d.x},${d.y})`;
         }
       })
       .on('click', (event, d) => {
@@ -179,7 +181,7 @@ const HierarchyChart = ({ data }) => {
       createNodes(svg, hierarchy);
 
       // Rotate the SVG to 90 degrees
-      svg.attr('transform', 'rotate(90)');
+      // svg.attr('transform', 'rotate(90)');
     }
   }, [createNodes, createTree, data]);
 
