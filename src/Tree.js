@@ -127,8 +127,16 @@ const HierarchyChart = ({ data }) => {
       .append('g')
       .attr('class', 'node')
       .attr('transform', (d) => {
-        if (d.depth === 2) {
-          return `translate(${d.x},${d.y + 10})`;
+        if (!d.children && !d._children) {
+          console.log(d.parent.children.indexOf(d));
+          // Leaf nodes
+          const parentY = d.parent ? d.parent.y + 120 : ''; // Get the y coordinate of the parent node
+          const verticalSpacing = 35; // Adjust this value for the desired vertical spacing between leaf nodes
+
+          // Calculate the y coordinate for the leaf node with a gap of 100 units
+          return `translate(${d.parent.x + 50},${
+            parentY + verticalSpacing * d.parent.children.indexOf(d)
+          })`;
         } else if (d.depth === 0) {
           return `translate(${d.x},${d.y + 10})`;
         } else {
