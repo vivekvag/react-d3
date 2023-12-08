@@ -3,7 +3,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import * as d3 from 'd3';
 
-const TREE_SIZE = [600, 300];
+const TREE_SIZE = [700, 400];
 const CIRCLE_RADIUS = 5;
 
 const HierarchyChart = ({ data }) => {
@@ -93,8 +93,10 @@ const HierarchyChart = ({ data }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createTree = () => {
     const hierarchy = d3.hierarchy(data);
+    console.log(hierarchy);
     const treeLayout = d3.tree().size(TREE_SIZE);
     treeLayout(hierarchy);
+    console.log(treeLayout(hierarchy));
     return hierarchy;
   };
 
@@ -110,14 +112,13 @@ const HierarchyChart = ({ data }) => {
         d3
           .linkVertical()
           .x((d) => d.x)
-          .y((d) => d.y)
+          .y((d) => d.y + 10)
       )
       .attr('stroke', '#ccc');
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
-    const nodeSeparation = 20;
     console.log(svg);
     const nodes = svg
       .selectAll('.node')
@@ -127,7 +128,9 @@ const HierarchyChart = ({ data }) => {
       .attr('class', 'node')
       .attr('transform', (d) => {
         if (d.depth === 2) {
-          return `translate(${d.x},${d.y})`;
+          return `translate(${d.x},${d.y + 10})`;
+        } else if (d.depth === 0) {
+          return `translate(${d.x},${d.y + 10})`;
         } else {
           return `translate(${d.x},${d.y})`;
         }

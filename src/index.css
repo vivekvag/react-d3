@@ -1,15 +1,17 @@
+html,
+body,
 #root {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 10rem;
+  margin: 0;
+  padding: 0;
 }
 
 svg {
-  padding: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 700px !important;
+  height: 500px !important;
+  margin: 30px;
   /* transform: rotate(90deg); */
 }
 
@@ -26,11 +28,6 @@ svg {
 .link {
   fill: none;
   stroke-width: 2px;
-}
-
-.node image,
-.node text {
-  /* transform: rotate(-90deg); */
 }
 
 .node image {
