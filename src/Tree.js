@@ -13,12 +13,6 @@ const HierarchyChart = ({ data }) => {
       .selectAll('.link')
       .filter((link) => link.target === d)
       .attr('stroke');
-    console.log(
-      svg
-        .selectAll('.link')
-        .filter((link) => link.target === d)
-        .attr('stroke')
-    );
     return currentColor === 'red';
   };
 
@@ -43,7 +37,6 @@ const HierarchyChart = ({ data }) => {
   };
 
   const resetChildColors = (d) => {
-    console.log(toggleParentColor(d));
     const svg = d3.select(svgRef.current);
     const newColor = toggleParentColor(d) ? '#ccc' : 'red';
 
@@ -82,7 +75,6 @@ const HierarchyChart = ({ data }) => {
               resetChildColors(d);
             } else {
               updatePathColor(d);
-              console.log(d);
             }
           },
         },
@@ -93,10 +85,8 @@ const HierarchyChart = ({ data }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createTree = () => {
     const hierarchy = d3.hierarchy(data);
-    console.log(hierarchy);
     const treeLayout = d3.tree().size(TREE_SIZE);
     treeLayout(hierarchy);
-    console.log(treeLayout(hierarchy));
     return hierarchy;
   };
 
@@ -111,15 +101,34 @@ const HierarchyChart = ({ data }) => {
         'd',
         d3
           .linkVertical()
-          .x((d) => d.x)
-          .y((d) => d.y + 10)
+          .x((d) => {
+            if (!d.children && !d._children) {
+              const parentX = d.parent ? d.parent.x : '';
+
+              return parentX;
+            } else {
+              return d.x;
+            }
+          })
+          .y((d) => {
+            if (!d.children && !d._children) {
+              const parentY = d.parent ? d.parent.y + 110 : ''; // Get the y coordinate of the parent node
+              const verticalSpacing = 50; // Adjust this value for the desired vertical spacing between leaf nodes
+
+              // Calculate the y coordinate for the leaf node with a gap of 100 units
+              return parentY + verticalSpacing * d.parent.children.indexOf(d);
+              // return d.parent.y;
+            } else {
+              return d.y + 10;
+            }
+          })
       )
       .attr('stroke', '#ccc');
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
-    console.log(svg);
+    // console.log(svg);
     const nodes = svg
       .selectAll('.node')
       .data(hierarchy.descendants())
@@ -128,7 +137,7 @@ const HierarchyChart = ({ data }) => {
       .attr('class', 'node')
       .attr('transform', (d) => {
         if (!d.children && !d._children) {
-          console.log(d.parent.children.indexOf(d));
+          // console.log(d.parent.children.indexOf(d));
           // Leaf nodes
           const parentY = d.parent ? d.parent.y + 120 : ''; // Get the y coordinate of the parent node
           const verticalSpacing = 35; // Adjust this value for the desired vertical spacing between leaf nodes
