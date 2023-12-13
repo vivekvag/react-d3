@@ -129,7 +129,7 @@ const HierarchyChart = ({ data }) => {
             /C([\d.]+),([\d.]+),([\d.]+),([\d.]+)/,
             (_, x1, y1) => {
               console.log(y1);
-              return `C${x1},${Number(lastNumber)},${x1 - 10},${lastNumber}`;
+              return `C${x1},${lastNumber},${x1 - 10},${lastNumber}`;
             }
           );
           console.log(newPath);
