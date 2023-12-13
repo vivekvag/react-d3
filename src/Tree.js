@@ -97,34 +97,83 @@ const HierarchyChart = ({ data }) => {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr(
-        'd',
-        d3
+      .attr('d', (d) => {
+        const link = d3
           .linkVertical()
-          .x((d) => {
-            if (!d.children && !d._children) {
-              const parentX = d.parent ? d.parent.x : '';
-
-              return parentX;
-            } else {
-              return d.x;
-            }
-          })
+          .x((d) =>
+            !d.children && !d._children
+              ? (d.parent ? d.parent.x : '') + 45
+              : d.x
+          )
           .y((d) => {
             if (!d.children && !d._children) {
-              const parentY = d.parent ? d.parent.y + 110 : ''; // Get the y coordinate of the parent node
-              const verticalSpacing = 50; // Adjust this value for the desired vertical spacing between leaf nodes
-
-              // Calculate the y coordinate for the leaf node with a gap of 100 units
+              const parentY = d.parent ? d.parent.y + 125 : '';
+              const verticalSpacing = 40;
               return parentY + verticalSpacing * d.parent.children.indexOf(d);
-              // return d.parent.y;
             } else {
               return d.y + 10;
             }
-          })
-      )
+          });
+
+        // Get the generated path
+        const path = link(d);
+        if (d.target.depth === 2) {
+          // Extract M's x and y values
+          const mValues = path.match(/([\d.]+),([\d.]+)$/);
+          const lastNumber = mValues ? mValues[2] : null;
+          console.log('Last Number:', lastNumber);
+          console.log(d.target.depth);
+
+          // Update the second control point dynamically
+          const newPath = path.replace(
+            /C([\d.]+),([\d.]+),([\d.]+),([\d.]+)/,
+            (_, x1, y1) => {
+              return `C${x1},${y1},${x1 - 10},${Number(lastNumber) + 15}`;
+            }
+          );
+          console.log(newPath);
+          return newPath;
+        } else {
+          return path;
+        }
+      })
       .attr('stroke', '#ccc');
   };
+
+  // const createLinks = (svg, hierarchy) => {
+  //   svg
+  //     .selectAll('.link')
+  //     .data(hierarchy.links())
+  //     .enter()
+  //     .append('path')
+  //     .attr('class', 'link')
+  //     .attr(
+  //       'd',
+  //       d3
+  //         .linkVertical()
+  //         .x((d) => {
+  //           if (!d.children && !d._children) {
+  //             const parentX = d.parent ? d.parent.x : '';
+  //             return parentX + 50;
+  //           } else {
+  //             return d.x;
+  //           }
+  //         })
+  //         .y((d) => {
+  //           if (!d.children && !d._children) {
+  //             const parentY = d.parent ? d.parent.y + 120 : ''; // Get the y coordinate of the parent node
+  //             const verticalSpacing = 35; // Adjust this value for the desired vertical spacing between leaf nodes
+
+  //             // Calculate the y coordinate for the leaf node with a gap of 100 units
+  //             return parentY + verticalSpacing * d.parent.children.indexOf(d);
+  //             // return d.parent.y;
+  //           } else {
+  //             return d.y + 10;
+  //           }
+  //         })
+  //     )
+  //     .attr('stroke', '#ccc');
+  // };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
