@@ -102,13 +102,13 @@ const HierarchyChart = ({ data }) => {
           .linkVertical()
           .x((d) =>
             !d.children && !d._children
-              ? (d.parent ? d.parent.x : '') + 45
+              ? (d.parent ? d.parent.x : '') + 40
               : d.x
           )
           .y((d) => {
             if (!d.children && !d._children) {
-              const parentY = d.parent ? d.parent.y + 125 : '';
-              const verticalSpacing = 40;
+              const parentY = d.parent ? d.parent.y + 130 : '';
+              const verticalSpacing = 45;
               return parentY + verticalSpacing * d.parent.children.indexOf(d);
             } else {
               return d.y + 10;
@@ -128,7 +128,8 @@ const HierarchyChart = ({ data }) => {
           const newPath = path.replace(
             /C([\d.]+),([\d.]+),([\d.]+),([\d.]+)/,
             (_, x1, y1) => {
-              return `C${x1},${y1},${x1 - 10},${Number(lastNumber) + 15}`;
+              console.log(y1);
+              return `C${x1},${Number(lastNumber)},${x1 - 10},${lastNumber}`;
             }
           );
           console.log(newPath);
@@ -189,7 +190,7 @@ const HierarchyChart = ({ data }) => {
           // console.log(d.parent.children.indexOf(d));
           // Leaf nodes
           const parentY = d.parent ? d.parent.y + 120 : ''; // Get the y coordinate of the parent node
-          const verticalSpacing = 35; // Adjust this value for the desired vertical spacing between leaf nodes
+          const verticalSpacing = 45; // Adjust this value for the desired vertical spacing between leaf nodes
 
           // Calculate the y coordinate for the leaf node with a gap of 100 units
           return `translate(${d.parent.x + 50},${
