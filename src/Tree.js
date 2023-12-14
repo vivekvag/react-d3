@@ -110,8 +110,10 @@ const HierarchyChart = ({ data }) => {
               const parentY = d.parent ? d.parent.y + 130 : '';
               const verticalSpacing = 45;
               return parentY + verticalSpacing * d.parent.children.indexOf(d);
-            } else {
+            } else if (d.depth === 0) {
               return d.y + 10;
+            } else {
+              return d.y - 50;
             }
           });
 
@@ -141,41 +143,6 @@ const HierarchyChart = ({ data }) => {
       .attr('stroke', '#ccc');
   };
 
-  // const createLinks = (svg, hierarchy) => {
-  //   svg
-  //     .selectAll('.link')
-  //     .data(hierarchy.links())
-  //     .enter()
-  //     .append('path')
-  //     .attr('class', 'link')
-  //     .attr(
-  //       'd',
-  //       d3
-  //         .linkVertical()
-  //         .x((d) => {
-  //           if (!d.children && !d._children) {
-  //             const parentX = d.parent ? d.parent.x : '';
-  //             return parentX + 50;
-  //           } else {
-  //             return d.x;
-  //           }
-  //         })
-  //         .y((d) => {
-  //           if (!d.children && !d._children) {
-  //             const parentY = d.parent ? d.parent.y + 120 : ''; // Get the y coordinate of the parent node
-  //             const verticalSpacing = 35; // Adjust this value for the desired vertical spacing between leaf nodes
-
-  //             // Calculate the y coordinate for the leaf node with a gap of 100 units
-  //             return parentY + verticalSpacing * d.parent.children.indexOf(d);
-  //             // return d.parent.y;
-  //           } else {
-  //             return d.y + 10;
-  //           }
-  //         })
-  //     )
-  //     .attr('stroke', '#ccc');
-  // };
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const createNodes = (svg, hierarchy) => {
     // console.log(svg);
@@ -199,7 +166,7 @@ const HierarchyChart = ({ data }) => {
         } else if (d.depth === 0) {
           return `translate(${d.x},${d.y + 10})`;
         } else {
-          return `translate(${d.x},${d.y})`;
+          return `translate(${d.x},${d.y - 50})`;
         }
       })
       .on('click', (event, d) => {
